@@ -7,15 +7,18 @@ final class ViewController: UIViewController {
 
     private var isInteractingWithAudioSession = false {
         didSet {
-            button.isUserInteractionEnabled = !isInteractingWithAudioSession
+            label.isUserInteractionEnabled = !isInteractingWithAudioSession
             log("block interaction: \(isInteractingWithAudioSession)")
         }
     }
 
     private var isActive: Bool = false {
         didSet {
-            let title = isActive ? "deactivate" : "activate"
-            button.setTitle(title, for: .normal)
+
+            label.text = isActive ? "playing" : "paused"
+            let systemName = isActive ? "pause.rectangle.fill" : "play.rectangle.fill"
+            let image = UIImage(systemName: systemName)
+            imageView.image = image
 
             let isActive = self.isActive
 
@@ -28,11 +31,10 @@ final class ViewController: UIViewController {
 
                     let a = AVAudioSession.sharedInstance()
                     try! a.setActive(true, options: [])
+
                     DispatchQueue.main.async {
-
-                    player.play()
-
-                        }
+                        player.play()
+                    }
                 } else {
                     player.pause()
                 }
@@ -40,7 +42,13 @@ final class ViewController: UIViewController {
         }
     }
 
-    @IBOutlet weak var button: UIButton!
+    @IBOutlet weak var imageView: UIImageView!
+
+    @IBOutlet weak var label: UILabel! {
+        didSet {
+            label.text = nil
+        }
+    }
 
     private var timeControlStatusKVO: NSKeyValueObservation?
     private var rateKVO: NSKeyValueObservation?
@@ -65,6 +73,13 @@ final class ViewController: UIViewController {
     }
 
     @IBAction func tap(_ sender: Any) {
+
+        UIView.animate(withDuration: 0.3, animations: {
+            self.view.backgroundColor = .systemGray6
+            UIView.animate(withDuration: 0.2, animations: {
+                self.view.backgroundColor = .systemBackground
+            })
+        })
         isActive = !isActive
     }
 
