@@ -7,7 +7,7 @@ final class ViewController: UIViewController {
 
     private var isInteractingWithAudioSession = false {
         didSet {
-            label.isUserInteractionEnabled = !isInteractingWithAudioSession
+            view.isUserInteractionEnabled = !isInteractingWithAudioSession
             log("block interaction: \(isInteractingWithAudioSession)")
         }
     }
@@ -76,10 +76,11 @@ final class ViewController: UIViewController {
 
         UIView.animate(withDuration: 0.3, animations: {
             self.view.backgroundColor = .systemGray6
+        }) { _ in
             UIView.animate(withDuration: 0.2, animations: {
                 self.view.backgroundColor = .systemBackground
             })
-        })
+        }
         isActive = !isActive
     }
 
